@@ -1,16 +1,21 @@
 package com.example.sharedpreferencesexample
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.example.sharedpreferencesexample.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
+    companion object {
+        const val RPL = "TESTFILE"
+    }
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val pref = getPreferences(Context.MODE_PRIVATE)
+        val filename = "$packageName-$RPL"
+        val pref = getSharedPreferences(filename, Context.MODE_PRIVATE)
         binding.btnSave.setOnClickListener {
             val editor = pref.edit()
             editor.putString("firstName",
@@ -27,6 +32,11 @@ class MainActivity : AppCompatActivity() {
             binding.etFirstName.setText(firstName)
             binding.etLastName.setText(lastName)
             binding.tvOutput.text = output
+        }
+        binding.btnSecondActivity.setOnClickListener{
+            val intent = Intent(this@MainActivity,
+                SecondActivity::class.java)
+            startActivity(intent)
         }
     }
     override fun onResume() {
